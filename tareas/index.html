@@ -25,6 +25,7 @@
   --red:#E2786A; --ok:#7CC79A; --btn:#F1F0EA; --btn-ink:#191917; color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5;font-weight:500}
@@ -64,7 +65,7 @@ h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
 .tools .sp{margin-left:auto}
 
 /* quick add */
-.quick{display:grid;grid-template-columns:1fr 160px 160px 150px auto;border:1px solid var(--ink);margin-bottom:26px}
+.quick{display:grid;grid-template-columns:1fr 140px 140px 150px 180px auto;border:1px solid var(--ink);margin-bottom:26px}
 .quick input,.quick select{border:0;border-left:1px solid var(--line);background:var(--bg);padding:13px 14px;min-width:0;border-radius:0}
 .quick input:first-child{border-left:0;font-weight:600}
 .quick input:focus,.quick select:focus{outline:none;background:var(--soft)}
@@ -156,6 +157,17 @@ h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
 .step button:hover{border-color:var(--ink)}
 .won{display:inline-block;background:var(--y);color:#1F1F1B;font-weight:700;font-size:12px;padding:2px 8px;margin-top:10px}
 
+.mtasks{margin-top:12px;border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px}
+.mt{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600}
+.mt .chk{width:20px;height:20px;flex:none}
+.mt.done span{text-decoration:line-through;color:var(--muted)}
+.mt.done .chk{background:var(--ok);border-color:var(--ok)}
+.mt.done .chk::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.addt{background:none;border:0;padding:4px 0 0;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink);text-align:left;text-decoration:underline;text-underline-offset:3px}
+.links{display:flex;flex-direction:column;gap:2px;margin-top:6px;max-height:240px;overflow:auto}
+.links label{display:flex;gap:10px;align-items:center;padding:6px 0;font-weight:600;font-size:14px;cursor:pointer}
+.f .links input{width:18px;height:18px;accent-color:var(--ink);flex:none;padding:0;border:0;margin:0}
+.links small{color:var(--muted);font-weight:500}
 /* logros */
 .sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:30px}
 .sum div{padding:18px 16px}
@@ -475,6 +487,7 @@ function renderBoard(){
     <select name="area" aria-label="Área">${AREAS.map(a=>`<option ${a.k===(st.area||AREAS[0].k)?'selected':''}>${a.k}</option>`).join('')}</select>
     <select name="responsable" aria-label="Responsable"><option value="">Responsable</option>${equipo().map(r=>`<option ${r===st.resp?'selected':''}>${esc(r)}</option>`).join('')}</select>
     <input name="limite" type="date" aria-label="Fecha límite">
+    <select name="meta" aria-label="Meta">${metaOptions(st.area||AREAS[0].k,'')}</select>
     <button class="btn" type="submit">Agregar</button></form>`;
   const cols = ESTADOS.map(e=>{
     let items = list.filter(t=>(t.estado||'pendiente')===e.k);
@@ -499,7 +512,10 @@ function renderMetas(){
       <div class="bar"><i style="width:${pct}%"></i></div>
       <div class="nums"><span><b>${av}</b> de ${ob} ${esc(m.unidad || (m.medida==='numero'?'':'tareas'))} · ${pct}%</span>
       ${m.medida==='numero' ? `<span class="step"><button type="button" data-step="-1" data-id="${esc(m.id)}" aria-label="Restar uno">−</button><button type="button" data-step="1" data-id="${esc(m.id)}" aria-label="Sumar uno">+</button></span>` : ''}</div>
-      ${win ? `<span class="won">Cumplida · ${fDate(win)}</span>` : m.medida!=='numero' ? `<p class="hint">Avanza cuando terminas tareas vinculadas a esta meta.</p>`:''}
+      ${win ? `<span class="won">Cumplida · ${fDate(win)}</span>` : ''}
+      ${m.medida!=='numero' ? (()=>{ const lt = T.filter(t=>t.meta===m.id).sort((a,b)=>(a.estado==='hecha')-(b.estado==='hecha'));
+        return `<div class="mtasks">${lt.length ? lt.map(t=>`<div class="mt${t.estado==='hecha'?' done':''}"><button type="button" class="chk" data-check="${esc(t.id)}" aria-label="${t.estado==='hecha'?'Marcar como pendiente':'Marcar como hecha'}"></button><span>${esc(t.titulo)}</span></div>`).join('') : '<p class="hint" style="margin:0">Aún no hay tareas en esta meta. Agrega una y márcala cuando la termines.</p>'}
+        <button type="button" class="addt" data-addtask="${esc(m.id)}">+ Agregar tarea a esta meta</button></div>`; })() : ''}
     </article>`;
   }).join('');
   $('#view').innerHTML = `<div class="mhead"><label>Mes <select id="mesSel">${months.map(x=>`<option value="${x}" ${x===st.mes?'selected':''}>${fMonth(x)}</option>`).join('')}</select></label>
@@ -582,9 +598,9 @@ function metaOptions(area, val){
   const ms = M.filter(m=>m.area===area && (m.mes===THIS_MONTH || m.id===val || (m.mes||'')>THIS_MONTH));
   return `<option value="">Sin meta</option>` + ms.map(m=>`<option value="${esc(m.id)}" ${m.id===val?'selected':''}>${esc(m.titulo)} (${fMonth(m.mes)})</option>`).join('');
 }
-function openTask(t){
+function openTask(t, preset){
   editing = { tabla:'tareas', id: t?.id || null };
-  const d = t || { area: st.area || AREAS[0].k, estado:'pendiente', prioridad:'media', responsable: st.resp };
+  const d = t || { area: st.area || AREAS[0].k, estado:'pendiente', prioridad:'media', responsable: st.resp, ...(preset||{}) };
   $('#dT').textContent = t ? 'Editar tarea' : 'Nueva tarea';
   $('#fields').innerHTML = `
     <label class="f"><span>Tarea</span><input name="titulo" required value="${esc(d.titulo)}" placeholder="Ej. Carrusel lanzamiento de noviembre"></label>
@@ -613,8 +629,19 @@ function openMeta(m){
     <label class="f"><span>Unidad</span><input name="unidad" value="${esc(d.unidad)}" placeholder="posts, ventas, piezas…"></label></div>
     <label class="f" id="avWrap"><span>Avance actual</span><input name="avance" type="number" min="0" value="${esc(d.avance||0)}"></label>
     <p class="hint" id="mHint"></p>
+    <div class="f" id="linkWrap"><span>Tareas que cuentan para esta meta</span><div class="links" id="links"></div></div>
     <p class="msg" id="msg"></p>`;
-  const sync = () => { const n = form.medida.value==='numero'; $('#avWrap').hidden = !n;
+  const myId = m?.id || null;
+  const drawLinks = () => {
+    const area = form.area.value;
+    const cand = T.filter(t=>t.area===area && (!t.meta || t.meta===myId || !M.some(x=>x.id===t.meta)))
+      .sort((a,b)=>(b.creada||'').localeCompare(a.creada||''));
+    $('#links').innerHTML = cand.length ? cand.map(t=>`<label><input type="checkbox" name="lnk" value="${esc(t.id)}" ${myId && t.meta===myId?'checked':''}>${esc(t.titulo)} <small>${t.estado==='hecha'?'· hecha':''}</small></label>`).join('')
+      : '<p class="hint">No hay tareas sueltas en esta área. Créalas en el tablero o con “+ Agregar tarea a esta meta”.</p>';
+  };
+  drawLinks();
+  form.area.addEventListener('change', drawLinks);
+  const sync = () => { const n = form.medida.value==='numero'; $('#avWrap').hidden = !n; $('#linkWrap').hidden = n;
     $('#mHint').textContent = n ? 'Actualiza el avance aquí o con los botones + y − en la tarjeta.' : 'Cada tarea vinculada a esta meta suma 1 cuando se marca como hecha.'; };
   form.medida.onchange = sync; sync();
   $('#del').hidden = !m;
@@ -627,7 +654,8 @@ form.addEventListener('submit', async e=>{
   const fd = Object.fromEntries(new FormData(form));
   Object.keys(fd).forEach(k=>fd[k]=String(fd[k]).trim());
   if (!fd.titulo) { $('#msg').textContent = 'Escribe un nombre.'; return; }
-  let item;
+  let item, linkChanges = [];
+  delete fd.lnk;
   if (editing.tabla==='tareas'){
     const prev = T.find(t=>t.id===editing.id) || {};
     item = { ...prev, ...fd, id: editing.id || uid('t'), creada: prev.creada || TODAY };
@@ -638,10 +666,15 @@ form.addEventListener('submit', async e=>{
     if (item.medida!=='numero') item.avance = '';
     item.cumplida = item.medida==='numero' && (+item.avance||0) >= Math.max(1,+item.objetivo||1) ? (prev.cumplida || TODAY) : '';
     st.mes = item.mes || st.mes;
+    if (item.medida!=='numero') {
+      const want = new Set([...form.querySelectorAll('input[name=lnk]:checked')].map(i=>i.value));
+      linkChanges = T.filter(t => (want.has(t.id) && t.meta!==item.id) || (!want.has(t.id) && t.meta===item.id && t.area===item.area))
+        .map(t => ({ ...t, meta: want.has(t.id) ? item.id : '' }));
+    }
   }
   $('#dlg').close();
   if (editing.tabla==='tareas' && item.estado==='hecha' && (T.find(t=>t.id===item.id)||{}).estado!=='hecha') celebrate(item);
-  try { await save(editing.tabla, item); } catch(err){}
+  try { await save(editing.tabla, item); for (const t of linkChanges) await save('tareas', t); } catch(err){}
 });
 $('#del').onclick = async ()=>{
   if (!editing?.id) return;
@@ -682,15 +715,17 @@ document.addEventListener('click', e=>{
   const s = t.closest('[data-step]'); if (s){ e.stopPropagation(); step(s.dataset.id, +s.dataset.step); return; }
   const k = t.closest('[data-task]'); if (k){ openTask(T.find(x=>x.id===k.dataset.task)); return; }
   const m = t.closest('[data-meta]'); if (m){ openMeta(M.find(x=>x.id===m.dataset.meta)); return; }
+  const ad = t.closest('[data-addtask]'); if (ad){ e.stopPropagation(); const m = M.find(x=>x.id===ad.dataset.addtask); openTask(null, { area:m.area, meta:m.id }); return; }
   if (t.closest('#newMeta')) { openMeta(null); return; }
 });
-document.addEventListener('change', e=>{ if (e.target.id==='mesSel'){ st.mes = e.target.value; render(); } });
+document.addEventListener('change', e=>{ if (e.target.id==='mesSel'){ st.mes = e.target.value; render(); }
+  const q = e.target.closest && e.target.closest('#quick'); if (q && e.target.name==='area') q.meta.innerHTML = metaOptions(e.target.value,''); });
 document.addEventListener('submit', e=>{
   if (e.target.id!=='quick') return;
   e.preventDefault();
   const fd = Object.fromEntries(new FormData(e.target));
   const titulo = String(fd.titulo||'').trim(); if (!titulo) return;
-  save('tareas', { id: uid('t'), titulo, area: fd.area, responsable: String(fd.responsable||'').trim(), estado:'pendiente', prioridad:'media', limite: fd.limite||'', creada: TODAY, hecha:'', meta:'', notas:'' }).catch(()=>{});
+  save('tareas', { id: uid('t'), titulo, area: fd.area, responsable: String(fd.responsable||'').trim(), estado:'pendiente', prioridad:'media', limite: fd.limite||'', creada: TODAY, hecha:'', meta: fd.meta||'', notas:'' }).catch(()=>{});
   setTimeout(()=>{ const q=$('#quick'); if(q){ q.titulo.focus(); } },50);
 });
 /* arrastrar tarjetas entre columnas */
