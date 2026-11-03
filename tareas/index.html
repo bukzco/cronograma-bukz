@@ -40,6 +40,9 @@ h1{font-size:clamp(32px,5vw,50px);line-height:1.05;letter-spacing:-.02em;font-we
 h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
 .btn{background:var(--btn);color:var(--btn-ink);border:0;padding:13px 24px;font-weight:700;font-size:15px;cursor:pointer}
 .btn:disabled{opacity:.35;cursor:not-allowed}
+.hbtns{display:flex;gap:10px;flex-wrap:wrap}
+.btn2{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink);color:var(--ink);background:var(--bg);padding:12px 20px;font-weight:700;font-size:15px;text-decoration:none}
+.btn2:hover{background:var(--y);color:#1F1F1B;border-color:#1F1F1B}
 .link{background:none;border:0;padding:0;cursor:pointer;font-weight:600;color:var(--muted)}
 .link:hover{color:var(--ink)}
 .demo{background:var(--soft);border-left:4px solid var(--y);padding:10px 14px;margin:0 0 22px;font-size:14px}
@@ -218,7 +221,7 @@ dialog::backdrop{background:rgba(31,31,27,.35)}
       <svg class="logo" viewBox="195 184 581 610" role="img" aria-label="Bukz"><path fill="#FCE823" d="M195 184H485V346A162 162 0 0 0 647 184H776A291 291 0 0 1 485 475H195Z"/><path fill="#FCE823" d="M195 504H485A291 291 0 0 1 776 794H648A162 162 0 0 0 485 632V794H195Z"/></svg>
       <div><p class="kicker">Bukz · Departamento de mercadeo</p><h1>Tareas y <span class="yr">metas</span></h1></div>
     </div>
-    <button class="btn" id="newBtn" type="button">Nueva tarea</button>
+    <div class="hbtns"><a class="btn2" href="../">📅 Cronograma de eventos</a><button class="btn" id="newBtn" type="button">Nueva tarea</button></div>
   </header>
 
   <div id="demo"></div>
