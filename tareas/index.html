@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tareas de Mercadeo · Bukz</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27195 184 581 610%27%3E%3Cpath fill=%27%23FCE823%27 d=%27M195 184H485V346A162 162 0 0 0 647 184H776A291 291 0 0 1 485 475H195Z%27/%3E%3Cpath fill=%27%23FCE823%27 d=%27M195 504H485A291 291 0 0 1 776 794H648A162 162 0 0 0 485 632V794H195Z%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --ink:#1F1F1B; --muted:#77766F; --line:#E7E6E0; --soft:#F7F6F2;
+  --y:#FCE823; --red:#A63A2B; --ok:#2F7D4F; --btn:#1F1F1B; --btn-ink:#FFFFFF; --card:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#191917; --ink:#F1F0EA; --muted:#9C9B94; --line:#33322E; --soft:#22221F; --card:#22221F;
+    --red:#E2786A; --ok:#7CC79A; --btn:#F1F0EA; --btn-ink:#191917; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#191917; --ink:#F1F0EA; --muted:#9C9B94; --line:#33322E; --soft:#22221F; --card:#22221F;
+  --red:#E2786A; --ok:#7CC79A; --btn:#F1F0EA; --btn-ink:#191917; color-scheme:dark;
+}
+*{box-sizing:border-box}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5;font-weight:500}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:36px clamp(16px,4vw,48px) 80px}
+
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:20px}
+.logo{width:clamp(52px,6vw,70px);height:auto;flex:none;display:block}
+.kicker{color:var(--muted);font-weight:600;margin:0 0 4px}
+h1{font-size:clamp(32px,5vw,50px);line-height:1.05;letter-spacing:-.02em;font-weight:700;margin:0}
+h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
+.btn{background:var(--btn);color:var(--btn-ink);border:0;padding:13px 24px;font-weight:700;font-size:15px;cursor:pointer}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.link{background:none;border:0;padding:0;cursor:pointer;font-weight:600;color:var(--muted)}
+.link:hover{color:var(--ink)}
+.demo{background:var(--soft);border-left:4px solid var(--y);padding:10px 14px;margin:0 0 22px;font-size:14px}
+
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;padding:0 0 12px;cursor:pointer;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;font-size:16px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+
+.areas{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 14px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);padding:7px 13px;cursor:pointer;font-weight:600;font-size:14px}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.chip small{color:var(--muted);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--bg);opacity:.7}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.tools{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:22px}
+.tools select,.tools input{border:0;border-bottom:1px solid var(--line);background:transparent;padding:6px 2px;border-radius:0;min-height:36px;color:var(--ink)}
+.tools select:focus,.tools input:focus{outline:none;border-bottom-color:var(--ink)}
+.tools .sp{margin-left:auto}
+
+/* quick add */
+.quick{display:grid;grid-template-columns:1fr 160px 160px 150px auto;border:1px solid var(--ink);margin-bottom:26px}
+.quick input,.quick select{border:0;border-left:1px solid var(--line);background:var(--bg);padding:13px 14px;min-width:0;border-radius:0}
+.quick input:first-child{border-left:0;font-weight:600}
+.quick input:focus,.quick select:focus{outline:none;background:var(--soft)}
+.quick .btn{padding:0 20px}
+
+/* board */
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+.col{background:var(--soft);padding:14px;min-height:200px}
+.col.over{outline:2px dashed var(--ink);outline-offset:-2px}
+.col h2{font-size:15px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:baseline}
+.col h2 span{color:var(--muted);font-weight:600;font-size:13px}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);padding:11px 12px 11px 10px;display:grid;grid-template-columns:auto 1fr;gap:10px;cursor:pointer}
+.card:hover{border-color:var(--ink);border-left-color:var(--c)}
+.card.done .ti{text-decoration:line-through;color:var(--muted)}
+.chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);background:none;cursor:pointer;padding:0;display:grid;place-items:center;margin-top:1px}
+.chk:hover{border-color:var(--ink)}
+.done .chk{background:var(--ok);border-color:var(--ok)}
+.done .chk::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.ti{font-weight:700;line-height:1.3}
+.me{font-size:13px;color:var(--muted);margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 10px}
+.late{color:var(--red);font-weight:700}
+.pri{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:1px 6px}
+.empty{color:var(--muted);font-size:14px;padding:6px 2px}
+
+/* metas */
+.mhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.mhead select,.mhead input{border:0;border-bottom:1px solid var(--line);background:transparent;padding:6px 2px;min-height:36px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.meta{border:1px solid var(--line);padding:16px;cursor:pointer;background:var(--card)}
+.meta:hover{border-color:var(--ink)}
+.meta .ar{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:7px}
+.meta h3{margin:6px 0 12px;font-size:18px;line-height:1.25}
+.bar{height:10px;background:var(--soft);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--c)}
+.nums{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:14px}
+.nums b{font-size:20px}
+.step{display:flex;gap:6px}
+.step button{width:32px;height:32px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-weight:800;font-size:16px}
+.step button:hover{border-color:var(--ink)}
+.won{display:inline-block;background:var(--y);color:#1F1F1B;font-weight:700;font-size:12px;padding:2px 8px;margin-top:10px}
+
+/* logros */
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:30px}
+.sum div{padding:18px 16px}
+.sum div+div{border-left:1px solid var(--line)}
+.sum b{display:block;font-size:clamp(28px,4vw,40px);line-height:1;letter-spacing:-.02em}
+.sum span{color:var(--muted);font-size:13px;font-weight:600}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px}
+.acard{border:1px solid var(--line);border-top:6px solid var(--c);padding:18px;background:var(--card)}
+.acard h3{margin:0 0 14px;font-size:20px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.kpis b{display:block;font-size:26px;line-height:1.1}
+.kpis span{font-size:12px;color:var(--muted);font-weight:600}
+.spark{display:flex;align-items:flex-end;gap:4px;height:64px;margin:6px 0 4px}
+.spark i{flex:1;background:var(--c);min-height:2px;position:relative}
+.spark i.cur{outline:2px solid var(--ink);outline-offset:1px}
+.months{display:flex;gap:4px;font-size:10px;color:var(--muted)}
+.months span{flex:1;text-align:center}
+.lt{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.lt p{margin:6px 0;font-size:14px;display:flex;gap:8px}
+.lt p::before{content:"★";color:var(--ink)}
+.lt .none{color:var(--muted)}
+.lt .none::before{content:""}
+
+/* drawer */
+dialog{border:0;padding:0;margin:0 0 0 auto;height:100%;max-height:100%;width:min(460px,100%);background:var(--bg);color:var(--ink)}
+dialog::backdrop{background:rgba(31,31,27,.35)}
+.dr{display:flex;flex-direction:column;height:100%}
+.dr-h{padding:calc(26px + env(safe-area-inset-top,0px)) 28px 6px;display:flex;justify-content:space-between;gap:12px}
+.dr-h h2{margin:0;font-size:24px;line-height:1.2}
+.dr-h .x{border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
+.dr-b{padding:4px 28px 20px;overflow:auto;flex:1}
+.f{display:block;margin-top:16px}
+.f span{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.f input,.f select,.f textarea{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:8px 0;border-radius:0;font-weight:600}
+.f textarea{resize:vertical;min-height:70px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-bottom-color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.hint{font-size:12px;color:var(--muted);margin:4px 0 0}
+.dr-f{padding:16px 28px calc(22px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:flex;align-items:center;gap:16px}
+.dr-f .del{color:var(--red);margin-right:auto}
+.msg{font-size:13px;color:var(--red);min-height:1em}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--btn);color:var(--btn-ink);padding:10px 18px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.status{font-size:13px;color:var(--muted);margin-top:30px}
+
+@media (max-width:900px){
+  .quick{grid-template-columns:1fr 1fr}
+  .quick input:first-child{grid-column:1/-1;border-bottom:1px solid var(--line)}
+  .quick select,.quick input{border-left:0;border-bottom:1px solid var(--line)}
+  .quick .btn{grid-column:1/-1;padding:12px}
+  .board{grid-template-columns:1fr}
+  .sum{grid-template-columns:1fr 1fr}.sum div:nth-child(3){border-left:0}.sum div:nth-child(n+3){border-top:1px solid var(--line)}
+  .tools .sp{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="195 184 581 610" role="img" aria-label="Bukz"><path fill="#FCE823" d="M195 184H485V346A162 162 0 0 0 647 184H776A291 291 0 0 1 485 475H195Z"/><path fill="#FCE823" d="M195 504H485A291 291 0 0 1 776 794H648A162 162 0 0 0 485 632V794H195Z"/></svg>
+      <div><p class="kicker">Bukz · Departamento de mercadeo</p><h1>Tareas y <span class="yr">metas</span></h1></div>
+    </div>
+    <button class="btn" id="newBtn" type="button">Nueva tarea</button>
+  </header>
+
+  <div id="demo"></div>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button class="tab" role="tab" data-v="tablero">Tablero</button>
+    <button class="tab" role="tab" data-v="metas">Metas</button>
+    <button class="tab" role="tab" data-v="logros">Logros</button>
+  </nav>
+
+  <div class="areas" id="areas" aria-label="Áreas"></div>
+  <div class="tools" id="tools">
+    <select id="fResp" aria-label="Responsable"></select>
+    <input type="search" id="q" placeholder="Buscar tarea" aria-label="Buscar tarea">
+  </div>
+
+  <main id="view"><p class="empty">Cargando…</p></main>
+  <p class="status" id="status"></p>
+</div>
+
+<dialog id="dlg" aria-labelledby="dT">
+  <form class="dr" id="form" method="dialog">
+    <div class="dr-h"><h2 id="dT"></h2><button class="x" type="button" data-close aria-label="Cerrar">×</button></div>
+    <div class="dr-b" id="fields"></div>
+    <div class="dr-f">
+      <button class="link del" type="button" id="del">Eliminar</button>
+      <button class="link" type="button" data-close>Cancelar</button>
+      <button class="btn" type="submit" id="save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+<datalist id="lResp"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Conexión con Google Sheets (Apps Script) ===== */
+const API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';
+const KEY_STORE = 'bukz-tareas-clave';
+const DEMO = API_URL.startsWith('PEGA');
+
+const AREAS = [
+  {k:'Redes',c:'#F9B4CB'},{k:'Visual',c:'#C3B1F0'},{k:'Eventos',c:'#FCE823'},
+  {k:'Merch',c:'#FFB877'},{k:'Ecommerce',c:'#9ED9B8'},{k:'Pauta digital',c:'#A8C7F7'}
+];
+const AC = Object.fromEntries(AREAS.map(a=>[a.k,a.c]));
+const color = a => AC[a] || '#D6D5CE';
+const ESTADOS = [{k:'pendiente',n:'Por hacer'},{k:'curso',n:'En curso'},{k:'hecha',n:'Hecha'}];
+const PRIOS = [{k:'alta',n:'Alta'},{k:'media',n:'Media'},{k:'baja',n:'Baja'}];
+const MES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const TODAY = iso(new Date());
+const THIS_MONTH = TODAY.slice(0,7);
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+function fDate(s){ if(!s) return ''; const [y,m,d]=s.split('-').map(Number); return `${d} ${MES[m-1].slice(0,3).toLowerCase()}`; }
+function fMonth(s){ if(!s) return ''; const [y,m]=s.split('-').map(Number); return `${MES[m-1]} ${y}`; }
+
+let T = [], M = [];
+const st = { v:'tablero', area:'', resp:'', q:'', mes:THIS_MONTH, per:'mes' };
+let editing = null; // {tabla, id|null}
+
+/* ---------- datos ---------- */
+const api = {
+  async list(){
+    if (DEMO) return { tareas:T, metas:M };
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    const j = await r.json(); if (!j.ok) throw j; return j;
+  },
+  async post(body){
+    if (DEMO) return { ok:true };
+    let key = null; try { key = localStorage.getItem(KEY_STORE); } catch(e){}
+    if (!key) { key = prompt('Clave del equipo para editar:'); if (!key) throw { error:'cancel' }; }
+    const r = await fetch(API_URL, { method:'POST', body: JSON.stringify({ ...body, key }) });
+    const j = await r.json();
+    if (!j.ok) { if (j.error === 'clave') { try { localStorage.removeItem(KEY_STORE); } catch(e){} } throw j; }
+    try { localStorage.setItem(KEY_STORE, key); } catch(e){}
+    return j;
+  }
+};
+async function load(){
+  try {
+    const j = await api.list();
+    T = j.tareas || []; M = j.metas || [];
+    render();
+    $('#status').textContent = DEMO ? '' : `Actualizado ${new Date().toLocaleTimeString('es-CO',{hour:'numeric',minute:'2-digit'})}`;
+  } catch(e){ $('#status').textContent = 'No se pudieron cargar los datos. Revisa tu conexión y recarga.'; }
+}
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2200); }
+async function save(tabla, item){
+  const arr = tabla==='tareas' ? T : M;
+  const i = arr.findIndex(x=>x.id===item.id);
+  const prev = i>=0 ? arr[i] : null;
+  if (i>=0) arr[i]=item; else arr.push(item);
+  render();
+  try { await api.post({ action:'save', tabla, item }); toast('Guardado'); }
+  catch(e){
+    if (i>=0) arr[i]=prev; else arr.splice(arr.indexOf(item),1);
+    render();
+    toast(e && e.error==='clave' ? 'Clave incorrecta, no se guardó' : e && e.error==='cancel' ? 'No se guardó' : 'No se pudo guardar');
+    throw e;
+  }
+}
+async function remove(tabla, id){
+  const arr = tabla==='tareas' ? T : M;
+  const i = arr.findIndex(x=>x.id===id); if (i<0) return;
+  const [prev] = arr.splice(i,1); render();
+  try { await api.post({ action:'delete', tabla, id }); toast('Eliminado'); }
+  catch(e){ arr.splice(i,0,prev); render(); toast(e && e.error==='clave' ? 'Clave incorrecta' : 'No se pudo eliminar'); throw e; }
+}
+
+/* ---------- metas ---------- */
+function metaDone(m){ return T.filter(t=>t.meta===m.id && t.estado==='hecha').sort((a,b)=>(a.hecha||'').localeCompare(b.hecha||'')); }
+function avance(m){ return m.medida==='numero' ? (+m.avance||0) : metaDone(m).length; }
+function objetivo(m){ return Math.max(1, +m.objetivo||1); }
+function cumplida(m){
+  if (avance(m) < objetivo(m)) return '';
+  if (m.medida==='numero') return m.cumplida || TODAY;
+  const d = metaDone(m); return d[objetivo(m)-1]?.hecha || TODAY;
+}
+
+/* ---------- filtros ---------- */
+function tasks(){
+  const q = st.q.trim().toLowerCase();
+  return T.filter(t => (!st.area || t.area===st.area) && (!st.resp || t.responsable===st.resp)
+    && (!q || [t.titulo,t.responsable,t.notas].join(' ').toLowerCase().includes(q)));
+}
+function renderChips(){
+  const open = a => T.filter(t=>t.estado!=='hecha' && (!a || t.area===a)).length;
+  $('#areas').innerHTML = `<button type="button" class="chip" data-area="" aria-pressed="${!st.area}">Todas <small>${open('')}</small></button>` +
+    AREAS.map(a=>`<button type="button" class="chip" data-area="${esc(a.k)}" aria-pressed="${st.area===a.k}"><i class="dot" style="--c:${a.c}"></i>${esc(a.k)} <small>${open(a.k)}</small></button>`).join('');
+  const resp = [...new Set(T.map(t=>t.responsable).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  $('#fResp').innerHTML = '<option value="">Todo el equipo</option>' + resp.map(r=>`<option>${esc(r)}</option>`).join('');
+  $('#fResp').value = st.resp;
+  $('#lResp').innerHTML = resp.map(r=>`<option value="${esc(r)}">`).join('');
+}
+
+/* ---------- tablero ---------- */
+function card(t){
+  const late = t.estado!=='hecha' && t.limite && t.limite < TODAY;
+  const today = t.estado!=='hecha' && t.limite === TODAY;
+  const meta = t.meta && M.find(m=>m.id===t.meta);
+  const bits = [
+    !st.area && esc(t.area),
+    t.responsable && esc(t.responsable),
+    t.estado==='hecha' ? (t.hecha && 'Hecha el ' + fDate(t.hecha)) :
+      t.limite && `<span class="${late?'late':''}">${late?'Venció ':today?'Hoy · ':'Para el '}${today?'':fDate(t.limite)}</span>`,
+    meta && '◎ ' + esc(meta.titulo)
+  ].filter(Boolean);
+  return `<article class="card${t.estado==='hecha'?' done':''}" draggable="true" data-task="${esc(t.id)}" style="--c:${color(t.area)}">
+    <button type="button" class="chk" data-check="${esc(t.id)}" aria-label="${t.estado==='hecha'?'Marcar como pendiente':'Marcar como hecha'}"></button>
+    <div><div class="ti">${esc(t.titulo)} ${t.prioridad==='alta' && t.estado!=='hecha' ? '<span class="pri">Alta</span>':''}</div>
+    ${bits.length?`<div class="me">${bits.map(b=>`<span>${b}</span>`).join('')}</div>`:''}</div></article>`;
+}
+function renderBoard(){
+  const list = tasks();
+  const pr = {alta:0,media:1,baja:2};
+  const sort = (a,b)=>(pr[a.prioridad]??1)-(pr[b.prioridad]??1) || (a.limite||'9999').localeCompare(b.limite||'9999');
+  const quick = `<form class="quick" id="quick">
+    <input name="titulo" placeholder="Escribe una tarea y presiona Enter" aria-label="Nueva tarea" autocomplete="off">
+    <select name="area" aria-label="Área">${AREAS.map(a=>`<option ${a.k===(st.area||AREAS[0].k)?'selected':''}>${a.k}</option>`).join('')}</select>
+    <input name="responsable" list="lResp" placeholder="Responsable" aria-label="Responsable" value="${esc(st.resp)}">
+    <input name="limite" type="date" aria-label="Fecha límite">
+    <button class="btn" type="submit">Agregar</button></form>`;
+  const cols = ESTADOS.map(e=>{
+    let items = list.filter(t=>(t.estado||'pendiente')===e.k);
+    let extra = '';
+    if (e.k==='hecha'){ items = items.filter(t=>(t.hecha||'').slice(0,7)===THIS_MONTH).sort((a,b)=>(b.hecha||'').localeCompare(a.hecha||'')); extra = ' este mes'; }
+    else items.sort(sort);
+    return `<section class="col" data-col="${e.k}"><h2>${e.n}<span>${items.length}${extra}</span></h2>
+      <div class="cards">${items.map(card).join('') || `<p class="empty">${e.k==='hecha'?'Lo que termines este mes aparece aquí.':'Nada por aquí.'}</p>`}</div></section>`;
+  }).join('');
+  $('#view').innerHTML = quick + `<div class="board">${cols}</div>`;
+}
+
+/* ---------- metas ---------- */
+function renderMetas(){
+  const months = [...new Set([THIS_MONTH, ...M.map(m=>m.mes).filter(Boolean)])].sort().reverse();
+  let list = M.filter(m=>(m.mes||THIS_MONTH)===st.mes && (!st.area || m.area===st.area));
+  list.sort((a,b)=>AREAS.findIndex(x=>x.k===a.area)-AREAS.findIndex(x=>x.k===b.area));
+  const cards = list.map(m=>{
+    const av = avance(m), ob = objetivo(m), pct = Math.min(100, Math.round(av/ob*100)), win = cumplida(m);
+    return `<article class="meta" data-meta="${esc(m.id)}" style="--c:${color(m.area)}">
+      <div class="ar"><i class="dot"></i>${esc(m.area)}</div><h3>${esc(m.titulo)}</h3>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="nums"><span><b>${av}</b> de ${ob} ${esc(m.unidad || (m.medida==='numero'?'':'tareas'))} · ${pct}%</span>
+      ${m.medida==='numero' ? `<span class="step"><button type="button" data-step="-1" data-id="${esc(m.id)}" aria-label="Restar uno">−</button><button type="button" data-step="1" data-id="${esc(m.id)}" aria-label="Sumar uno">+</button></span>` : ''}</div>
+      ${win ? `<span class="won">Cumplida · ${fDate(win)}</span>` : m.medida!=='numero' ? `<p class="hint">Avanza cuando terminas tareas vinculadas a esta meta.</p>`:''}
+    </article>`;
+  }).join('');
+  $('#view').innerHTML = `<div class="mhead"><label>Mes <select id="mesSel">${months.map(x=>`<option value="${x}" ${x===st.mes?'selected':''}>${fMonth(x)}</option>`).join('')}</select></label>
+    <button class="link" type="button" id="newMeta">+ Nueva meta</button></div>
+    ${cards ? `<div class="mgrid">${cards}</div>` : `<p class="empty">No hay metas para ${fMonth(st.mes).toLowerCase()}${st.area?' en '+esc(st.area):''}. Crea una con “Nueva meta”.</p>`}`;
+}
+
+/* ---------- logros ---------- */
+function renderLogros(){
+  const y = TODAY.slice(0,4);
+  const inPer = d => d && (st.per==='mes' ? d.slice(0,7)===THIS_MONTH : d.slice(0,4)===y);
+  const areas = st.area ? AREAS.filter(a=>a.k===st.area) : AREAS;
+  const done = T.filter(t=>t.estado==='hecha' && inPer(t.hecha) && areas.some(a=>a.k===t.area));
+  const conLim = done.filter(t=>t.limite);
+  const aTiempo = conLim.length ? Math.round(conLim.filter(t=>t.hecha<=t.limite).length/conLim.length*100) : null;
+  const metasPer = M.filter(m=>areas.some(a=>a.k===m.area) && (st.per==='mes' ? m.mes===THIS_MONTH : (m.mes||'').slice(0,4)===y));
+  const won = metasPer.filter(m=>cumplida(m));
+  const byArea = areas.map(a=>({a, n:done.filter(t=>t.area===a.k).length})).sort((p,q)=>q.n-p.n);
+  const top = byArea[0] && byArea[0].n ? byArea[0].a.k : '—';
+
+  const cards = areas.map(a=>{
+    const d = done.filter(t=>t.area===a.k);
+    const dl = d.filter(t=>t.limite);
+    const pt = dl.length ? Math.round(dl.filter(t=>t.hecha<=t.limite).length/dl.length*100)+'%' : '—';
+    const ms = metasPer.filter(m=>m.area===a.k);
+    const mw = ms.filter(m=>cumplida(m));
+    const per = Array.from({length:12},(_,i)=>T.filter(t=>t.area===a.k && t.estado==='hecha' && (t.hecha||'').slice(0,7)===`${y}-${pad(i+1)}`).length);
+    const mx = Math.max(1,...per), cm = +TODAY.slice(5,7)-1;
+    return `<article class="acard" style="--c:${a.c}"><h3>${esc(a.k)}</h3>
+      <div class="kpis"><div><b>${d.length}</b><span>tareas hechas</span></div><div><b>${pt}</b><span>a tiempo</span></div><div><b>${mw.length}/${ms.length}</b><span>metas cumplidas</span></div></div>
+      <div class="spark" aria-label="Tareas hechas por mes en ${y}">${per.map((n,i)=>`<i class="${i===cm?'cur':''}" style="height:${n?Math.max(6,n/mx*100):0}%" title="${MES[i]}: ${n}"></i>`).join('')}</div>
+      <div class="months">${MES.map(m=>`<span>${m[0]}</span>`).join('')}</div>
+      <div class="lt">${mw.length ? mw.sort((p,q)=>cumplida(q).localeCompare(cumplida(p))).map(m=>`<p>${esc(m.titulo)} · ${fDate(cumplida(m))}</p>`).join('') : '<p class="none">Aún no hay metas cumplidas en este periodo.</p>'}</div>
+    </article>`;
+  }).join('');
+  $('#view').innerHTML = `<div class="mhead"><div class="tabs" style="border:0">
+      <button class="tab" data-per="mes" aria-selected="${st.per==='mes'}">Este mes</button>
+      <button class="tab" data-per="ano" aria-selected="${st.per==='ano'}">Este año</button></div></div>
+    <div class="sum"><div><b>${done.length}</b><span>tareas hechas</span></div><div><b>${aTiempo===null?'—':aTiempo+'%'}</b><span>a tiempo</span></div>
+      <div><b>${won.length}/${metasPer.length}</b><span>metas cumplidas</span></div><div><b style="font-size:clamp(22px,3vw,30px)">${esc(top)}</b><span>área con más tareas hechas</span></div></div>
+    <div class="agrid">${cards}</div>`;
+}
+
+function render(){
+  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-selected', b.dataset.v===st.v));
+  $('#tools').style.display = st.v==='tablero' ? '' : 'none';
+  $('#newBtn').textContent = st.v==='metas' ? 'Nueva meta' : 'Nueva tarea';
+  renderChips();
+  if (st.v==='tablero') renderBoard(); else if (st.v==='metas') renderMetas(); else renderLogros();
+}
+
+/* ---------- editor ---------- */
+const form = $('#form');
+function opt(list, val){ return list.map(o=>`<option value="${esc(o.k)}" ${o.k===val?'selected':''}>${esc(o.n||o.k)}</option>`).join(''); }
+function metaOptions(area, val){
+  const ms = M.filter(m=>m.area===area && (m.mes===THIS_MONTH || m.id===val || (m.mes||'')>THIS_MONTH));
+  return `<option value="">Sin meta</option>` + ms.map(m=>`<option value="${esc(m.id)}" ${m.id===val?'selected':''}>${esc(m.titulo)} (${fMonth(m.mes)})</option>`).join('');
+}
+function openTask(t){
+  editing = { tabla:'tareas', id: t?.id || null };
+  const d = t || { area: st.area || AREAS[0].k, estado:'pendiente', prioridad:'media', responsable: st.resp };
+  $('#dT').textContent = t ? 'Editar tarea' : 'Nueva tarea';
+  $('#fields').innerHTML = `
+    <label class="f"><span>Tarea</span><input name="titulo" required value="${esc(d.titulo)}" placeholder="Ej. Carrusel lanzamiento de noviembre"></label>
+    <div class="two"><label class="f"><span>Área</span><select name="area">${opt(AREAS,d.area)}</select></label>
+    <label class="f"><span>Responsable</span><input name="responsable" list="lResp" value="${esc(d.responsable)}"></label></div>
+    <div class="two"><label class="f"><span>Estado</span><select name="estado">${opt(ESTADOS,d.estado||'pendiente')}</select></label>
+    <label class="f"><span>Prioridad</span><select name="prioridad">${opt(PRIOS,d.prioridad||'media')}</select></label></div>
+    <label class="f"><span>Fecha límite</span><input name="limite" type="date" value="${esc(d.limite)}"></label>
+    <label class="f"><span>Suma a la meta</span><select name="meta">${metaOptions(d.area,d.meta)}</select></label>
+    <label class="f"><span>Notas</span><textarea name="notas">${esc(d.notas)}</textarea></label>
+    <p class="msg" id="msg"></p>`;
+  form.area.onchange = () => { form.meta.innerHTML = metaOptions(form.area.value, ''); };
+  $('#del').hidden = !t;
+  $('#dlg').showModal(); if (!t) setTimeout(()=>form.titulo.focus(),30);
+}
+function openMeta(m){
+  editing = { tabla:'metas', id: m?.id || null };
+  const d = m || { area: st.area || AREAS[0].k, medida:'tareas', mes: st.v==='metas' ? st.mes : THIS_MONTH };
+  $('#dT').textContent = m ? 'Editar meta' : 'Nueva meta';
+  $('#fields').innerHTML = `
+    <label class="f"><span>Meta</span><input name="titulo" required value="${esc(d.titulo)}" placeholder="Ej. Publicar 20 posts"></label>
+    <div class="two"><label class="f"><span>Área</span><select name="area">${opt(AREAS,d.area)}</select></label>
+    <label class="f"><span>Mes</span><input name="mes" type="month" required value="${esc(d.mes)}"></label></div>
+    <label class="f"><span>¿Cómo se mide?</span><select name="medida">${opt([{k:'tareas',n:'Contando tareas hechas'},{k:'numero',n:'Con un número (ventas, seguidores…)'}],d.medida)}</select></label>
+    <div class="two"><label class="f"><span>Objetivo</span><input name="objetivo" type="number" min="1" required value="${esc(d.objetivo||'')}"></label>
+    <label class="f"><span>Unidad</span><input name="unidad" value="${esc(d.unidad)}" placeholder="posts, ventas, piezas…"></label></div>
+    <label class="f" id="avWrap"><span>Avance actual</span><input name="avance" type="number" min="0" value="${esc(d.avance||0)}"></label>
+    <p class="hint" id="mHint"></p>
+    <p class="msg" id="msg"></p>`;
+  const sync = () => { const n = form.medida.value==='numero'; $('#avWrap').hidden = !n;
+    $('#mHint').textContent = n ? 'Actualiza el avance aquí o con los botones + y − en la tarjeta.' : 'Cada tarea vinculada a esta meta suma 1 cuando se marca como hecha.'; };
+  form.medida.onchange = sync; sync();
+  $('#del').hidden = !m;
+  $('#dlg').showModal(); if (!m) setTimeout(()=>form.titulo.focus(),30);
+}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$('#dlg').close());
+$('#dlg').addEventListener('click',e=>{ if(e.target===$('#dlg')) $('#dlg').close(); });
+form.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(form));
+  Object.keys(fd).forEach(k=>fd[k]=String(fd[k]).trim());
+  if (!fd.titulo) { $('#msg').textContent = 'Escribe un nombre.'; return; }
+  let item;
+  if (editing.tabla==='tareas'){
+    const prev = T.find(t=>t.id===editing.id) || {};
+    item = { ...prev, ...fd, id: editing.id || uid('t'), creada: prev.creada || TODAY };
+    item.hecha = item.estado==='hecha' ? (prev.estado==='hecha' && prev.hecha ? prev.hecha : TODAY) : '';
+  } else {
+    const prev = M.find(m=>m.id===editing.id) || {};
+    item = { ...prev, ...fd, id: editing.id || uid('m') };
+    if (item.medida!=='numero') item.avance = '';
+    item.cumplida = item.medida==='numero' && (+item.avance||0) >= Math.max(1,+item.objetivo||1) ? (prev.cumplida || TODAY) : '';
+    st.mes = item.mes || st.mes;
+  }
+  $('#dlg').close();
+  try { await save(editing.tabla, item); } catch(err){}
+});
+$('#del').onclick = async ()=>{
+  if (!editing?.id) return;
+  const isT = editing.tabla==='tareas';
+  if (!confirm(isT ? '¿Eliminar esta tarea?' : '¿Eliminar esta meta? Las tareas vinculadas se conservan.')) return;
+  $('#dlg').close();
+  try { await remove(editing.tabla, editing.id); } catch(e){}
+};
+
+/* ---------- acciones ---------- */
+function toggle(id){
+  const t = T.find(x=>x.id===id); if (!t) return;
+  const done = t.estado!=='hecha';
+  const item = { ...t, estado: done?'hecha':'pendiente', hecha: done?TODAY:'' };
+  const m = item.meta && M.find(x=>x.id===item.meta);
+  save('tareas', item).then(()=>{ if (done && m && cumplida(m)===TODAY && metaDone(m).length===objetivo(m)) toast('¡Meta cumplida: '+m.titulo+'!'); }).catch(()=>{});
+}
+function move(id, estado){
+  const t = T.find(x=>x.id===id); if (!t || t.estado===estado) return;
+  save('tareas', { ...t, estado, hecha: estado==='hecha' ? TODAY : '' }).catch(()=>{});
+}
+function step(id, d){
+  const m = M.find(x=>x.id===id); if (!m) return;
+  const av = Math.max(0, (+m.avance||0) + d);
+  const ob = objetivo(m);
+  const item = { ...m, avance:String(av), cumplida: av>=ob ? (m.cumplida||TODAY) : '' };
+  save('metas', item).then(()=>{ if (av===ob && d>0) toast('¡Meta cumplida: '+m.titulo+'!'); }).catch(()=>{});
+}
+document.addEventListener('click', e=>{
+  const t = e.target;
+  const v = t.closest('[data-v]'); if (v){ st.v = v.dataset.v; render(); return; }
+  const a = t.closest('[data-area]'); if (a){ st.area = a.dataset.area; render(); return; }
+  const p = t.closest('[data-per]'); if (p){ st.per = p.dataset.per; render(); return; }
+  const c = t.closest('[data-check]'); if (c){ e.stopPropagation(); toggle(c.dataset.check); return; }
+  const s = t.closest('[data-step]'); if (s){ e.stopPropagation(); step(s.dataset.id, +s.dataset.step); return; }
+  const k = t.closest('[data-task]'); if (k){ openTask(T.find(x=>x.id===k.dataset.task)); return; }
+  const m = t.closest('[data-meta]'); if (m){ openMeta(M.find(x=>x.id===m.dataset.meta)); return; }
+  if (t.closest('#newMeta')) { openMeta(null); return; }
+});
+document.addEventListener('change', e=>{ if (e.target.id==='mesSel'){ st.mes = e.target.value; render(); } });
+document.addEventListener('submit', e=>{
+  if (e.target.id!=='quick') return;
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(e.target));
+  const titulo = String(fd.titulo||'').trim(); if (!titulo) return;
+  save('tareas', { id: uid('t'), titulo, area: fd.area, responsable: String(fd.responsable||'').trim(), estado:'pendiente', prioridad:'media', limite: fd.limite||'', creada: TODAY, hecha:'', meta:'', notas:'' }).catch(()=>{});
+  setTimeout(()=>{ const q=$('#quick'); if(q){ q.titulo.focus(); } },50);
+});
+/* arrastrar tarjetas entre columnas */
+document.addEventListener('dragstart', e=>{ const k=e.target.closest?.('[data-task]'); if(k){ e.dataTransfer.setData('text/plain', k.dataset.task); e.dataTransfer.effectAllowed='move'; } });
+document.addEventListener('dragover', e=>{ const c=e.target.closest?.('[data-col]'); if(c){ e.preventDefault(); c.classList.add('over'); } });
+document.addEventListener('dragleave', e=>{ const c=e.target.closest?.('[data-col]'); if(c && !c.contains(e.relatedTarget)) c.classList.remove('over'); });
+document.addEventListener('drop', e=>{ const c=e.target.closest?.('[data-col]'); if(c){ e.preventDefault(); c.classList.remove('over'); move(e.dataTransfer.getData('text/plain'), c.dataset.col); } });
+
+$('#fResp').onchange = e=>{ st.resp = e.target.value; render(); };
+$('#q').oninput = e=>{ st.q = e.target.value; render(); };
+$('#newBtn').onclick = ()=> st.v==='metas' ? openMeta(null) : openTask(null);
+
+/* ---------- inicio ---------- */
+if (DEMO) {
+  $('#demo').innerHTML = '<p class="demo"><b>Vista de prueba.</b> Así se verá la plataforma. Los cambios no se guardan hasta conectar la hoja de cálculo.</p>';
+  const d = n => { const x = new Date(); x.setDate(x.getDate()+n); return iso(x); };
+  M = [
+    {id:'m1',titulo:'Publicar 20 posts',area:'Redes',objetivo:'20',medida:'tareas',avance:'',unidad:'posts',mes:THIS_MONTH,cumplida:''},
+    {id:'m2',titulo:'Ventas online',area:'Ecommerce',objetivo:'150',medida:'numero',avance:'112',unidad:'pedidos',mes:THIS_MONTH,cumplida:''},
+    {id:'m3',titulo:'Vitrinas renovadas',area:'Visual',objetivo:'3',medida:'tareas',avance:'',unidad:'vitrinas',mes:THIS_MONTH,cumplida:''},
+    {id:'m4',titulo:'Campañas activas',area:'Pauta digital',objetivo:'4',medida:'numero',avance:'4',unidad:'campañas',mes:THIS_MONTH,cumplida:d(-3)}
+  ];
+  T = [
+    {id:'t1',titulo:'Carrusel libros del mes',area:'Redes',responsable:'Community',estado:'curso',prioridad:'alta',limite:d(1),creada:d(-4),hecha:'',meta:'m1',notas:''},
+    {id:'t2',titulo:'Reel lanzamiento Felipe Monsalve',area:'Redes',responsable:'Cami',estado:'pendiente',prioridad:'media',limite:d(4),creada:d(-2),hecha:'',meta:'m1',notas:''},
+    {id:'t3',titulo:'Vitrina navideña Las Lomas',area:'Visual',responsable:'Cami',estado:'pendiente',prioridad:'alta',limite:d(-1),creada:d(-9),hecha:'',meta:'m3',notas:''},
+    {id:'t4',titulo:'Cotizar tote bags',area:'Merch',responsable:'Diseño',estado:'curso',prioridad:'baja',limite:d(8),creada:d(-1),hecha:'',meta:'',notas:''},
+    {id:'t5',titulo:'Banner Black Friday en la web',area:'Ecommerce',responsable:'Cami',estado:'pendiente',prioridad:'alta',limite:d(2),creada:d(-1),hecha:'',meta:'',notas:''},
+    {id:'t6',titulo:'Campaña Meta: club de lectura',area:'Pauta digital',responsable:'Cami',estado:'hecha',prioridad:'media',limite:d(-2),creada:d(-6),hecha:d(-3),meta:'',notas:''},
+    {id:'t7',titulo:'Fotos evento Zona G',area:'Eventos',responsable:'Community',estado:'hecha',prioridad:'media',limite:d(-1),creada:d(-5),hecha:d(-1),meta:'',notas:''},
+    {id:'t8',titulo:'Post semana de clubes',area:'Redes',responsable:'Diseño',estado:'hecha',prioridad:'media',limite:d(-2),creada:d(-7),hecha:d(-2),meta:'m1',notas:''},
+    {id:'t9',titulo:'Vitrina Salón Prado',area:'Visual',responsable:'Cami',estado:'hecha',prioridad:'media',limite:d(-4),creada:d(-10),hecha:d(-5),meta:'m3',notas:''}
+  ];
+  render();
+} else {
+  load();
+  setInterval(()=>{ if(!document.hidden && !$('#dlg').open) load(); }, 60000);
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && !$('#dlg').open) load(); });
+}
+render();
+</script>
+</body>
+</html>
