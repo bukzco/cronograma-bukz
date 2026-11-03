@@ -376,22 +376,22 @@ const HEART = ['.11.11.','1111111','1111111','.11111.','..111..','...1...'];
 function heart(on){ let r=''; HEART.forEach((row,y)=>row.split('').forEach((c,x)=>{ if(c==='1') r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${on?'#E2574C':'var(--line)'}"/>`; })); return `<svg viewBox="0 0 7 6" aria-hidden="true">${r}</svg>`; }
 const days = d => Math.round((new Date(TODAY) - new Date(d)) / 864e5);
 function petState(name){
+  // Cada tarea terminada es comida: alimenta al personaje y su efecto se va gastando en 10 días.
   const mine = T.filter(t=>t.responsable===name);
   const done = mine.filter(t=>t.estado==='hecha' && t.hecha);
-  const week = done.filter(t=>days(t.hecha)<=7);
-  const onTime = week.filter(t=>!t.limite || t.hecha<=t.limite).length;
+  const food = done.reduce((s,t)=>{ const d = days(t.hecha); if (d<0 || d>=10) return s;
+    return s + (25 + ((!t.limite || t.hecha<=t.limite) ? 5 : 0)) * (1 - d/10); }, 0);
   const late = mine.filter(t=>t.estado!=='hecha' && t.limite && t.limite<TODAY).length;
+  const week = done.filter(t=>days(t.hecha)<=7).length;
   const last = done.map(t=>t.hecha).sort().pop();
   const idle = last ? days(last) : null;
-  let s = 50 + week.length*12 + onTime*3 - late*15 - (idle===null ? 0 : Math.min(30, Math.max(0, idle-2)*5));
-  if (!mine.length) s = 55;
-  s = Math.max(0, Math.min(100, s));
-  const mood = s>=85?'radiante':s>=65?'feliz':s>=40?'calma':s>=20?'sueno':'triste';
-  const label = {radiante:'Radiante',feliz:'Feliz',calma:'En calma',sueno:'Con sueño',triste:'Triste'}[mood];
-  const say = late ? `${late} ${late===1?'tarea vencida le pesa':'tareas vencidas le pesan'}`
-    : idle!==null && idle>=4 ? `Lleva ${idle} días sin terminar una tarea`
-    : week.length ? `Terminó ${week.length} ${week.length===1?'tarea':'tareas'} esta semana`
-    : 'Esperando su próxima tarea';
+  const s = Math.max(0, Math.min(100, Math.round(10 + food - late*10)));
+  const mood = s>=85?'radiante':s>=60?'feliz':s>=35?'calma':s>=15?'sueno':'triste';
+  const label = {radiante:'Radiante',feliz:'Feliz',calma:'En calma',sueno:'Con hambre',triste:'Triste'}[mood];
+  const say = !done.length ? 'Tiene hambre: aún no ha recibido ningún logro'
+    : late ? `${late} ${late===1?'tarea vencida le pesa':'tareas vencidas le pesan'}`
+    : idle>=3 ? `Tiene hambre: lleva ${idle} días sin logros`
+    : `Se comió ${week} ${week===1?'logro':'logros'} esta semana`;
   const lvl = 1 + Math.floor(done.length/10), xp = done.length % 10;
   return { s, mood, label, say, lvl, xp };
 }
@@ -412,6 +412,7 @@ function renderPets(){
 function celebrate(t){
   if (!t || !EQUIPO.includes(t.responsable)) return;
   cheer = { name:t.responsable, until:Date.now()+1200 };
+  setTimeout(()=>toast(`+1 logro para ${t.responsable} 🍎`), 400);
   setTimeout(()=>{ if (st.v==='tablero') render(); }, 1250);
 }
 
