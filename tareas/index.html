@@ -216,6 +216,8 @@ const AREAS = [
 ];
 const AC = Object.fromEntries(AREAS.map(a=>[a.k,a.c]));
 const color = a => AC[a] || '#D6D5CE';
+const EQUIPO = ['Cami','Vero','Celes'];
+const equipo = () => [...new Set([...EQUIPO, ...T.map(t=>t.responsable).filter(Boolean)])];
 const ESTADOS = [{k:'pendiente',n:'Por hacer'},{k:'curso',n:'En curso'},{k:'hecha',n:'Hecha'}];
 const PRIOS = [{k:'alta',n:'Alta'},{k:'media',n:'Media'},{k:'baja',n:'Baja'}];
 const MES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -303,7 +305,7 @@ function renderChips(){
   const open = a => T.filter(t=>t.estado!=='hecha' && (!a || t.area===a)).length;
   $('#areas').innerHTML = `<button type="button" class="chip" data-area="" aria-pressed="${!st.area}">Todas <small>${open('')}</small></button>` +
     AREAS.map(a=>`<button type="button" class="chip" data-area="${esc(a.k)}" aria-pressed="${st.area===a.k}"><i class="dot" style="--c:${a.c}"></i>${esc(a.k)} <small>${open(a.k)}</small></button>`).join('');
-  const resp = [...new Set(T.map(t=>t.responsable).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  const resp = equipo();
   $('#fResp').innerHTML = '<option value="">Todo el equipo</option>' + resp.map(r=>`<option>${esc(r)}</option>`).join('');
   $('#fResp').value = st.resp;
   $('#lResp').innerHTML = resp.map(r=>`<option value="${esc(r)}">`).join('');
@@ -333,7 +335,7 @@ function renderBoard(){
   const quick = `<form class="quick" id="quick">
     <input name="titulo" placeholder="Escribe una tarea y presiona Enter" aria-label="Nueva tarea" autocomplete="off">
     <select name="area" aria-label="Área">${AREAS.map(a=>`<option ${a.k===(st.area||AREAS[0].k)?'selected':''}>${a.k}</option>`).join('')}</select>
-    <input name="responsable" list="lResp" placeholder="Responsable" aria-label="Responsable" value="${esc(st.resp)}">
+    <select name="responsable" aria-label="Responsable"><option value="">Responsable</option>${equipo().map(r=>`<option ${r===st.resp?'selected':''}>${esc(r)}</option>`).join('')}</select>
     <input name="limite" type="date" aria-label="Fecha límite">
     <button class="btn" type="submit">Agregar</button></form>`;
   const cols = ESTADOS.map(e=>{
@@ -425,7 +427,7 @@ function openTask(t){
   $('#fields').innerHTML = `
     <label class="f"><span>Tarea</span><input name="titulo" required value="${esc(d.titulo)}" placeholder="Ej. Carrusel lanzamiento de noviembre"></label>
     <div class="two"><label class="f"><span>Área</span><select name="area">${opt(AREAS,d.area)}</select></label>
-    <label class="f"><span>Responsable</span><input name="responsable" list="lResp" value="${esc(d.responsable)}"></label></div>
+    <label class="f"><span>Responsable</span><select name="responsable"><option value="">Sin asignar</option>${equipo().map(r=>`<option ${r===d.responsable?'selected':''}>${esc(r)}</option>`).join('')}</select></label></div>
     <div class="two"><label class="f"><span>Estado</span><select name="estado">${opt(ESTADOS,d.estado||'pendiente')}</select></label>
     <label class="f"><span>Prioridad</span><select name="prioridad">${opt(PRIOS,d.prioridad||'media')}</select></label></div>
     <label class="f"><span>Fecha límite</span><input name="limite" type="date" value="${esc(d.limite)}"></label>
@@ -546,14 +548,14 @@ if (DEMO) {
     {id:'m4',titulo:'Campañas activas',area:'Pauta digital',objetivo:'4',medida:'numero',avance:'4',unidad:'campañas',mes:THIS_MONTH,cumplida:d(-3)}
   ];
   T = [
-    {id:'t1',titulo:'Carrusel libros del mes',area:'Redes',responsable:'Community',estado:'curso',prioridad:'alta',limite:d(1),creada:d(-4),hecha:'',meta:'m1',notas:''},
+    {id:'t1',titulo:'Carrusel libros del mes',area:'Redes',responsable:'Celes',estado:'curso',prioridad:'alta',limite:d(1),creada:d(-4),hecha:'',meta:'m1',notas:''},
     {id:'t2',titulo:'Reel lanzamiento Felipe Monsalve',area:'Redes',responsable:'Cami',estado:'pendiente',prioridad:'media',limite:d(4),creada:d(-2),hecha:'',meta:'m1',notas:''},
     {id:'t3',titulo:'Vitrina navideña Las Lomas',area:'Visual',responsable:'Cami',estado:'pendiente',prioridad:'alta',limite:d(-1),creada:d(-9),hecha:'',meta:'m3',notas:''},
-    {id:'t4',titulo:'Cotizar tote bags',area:'Merch',responsable:'Diseño',estado:'curso',prioridad:'baja',limite:d(8),creada:d(-1),hecha:'',meta:'',notas:''},
+    {id:'t4',titulo:'Cotizar tote bags',area:'Merch',responsable:'Vero',estado:'curso',prioridad:'baja',limite:d(8),creada:d(-1),hecha:'',meta:'',notas:''},
     {id:'t5',titulo:'Banner Black Friday en la web',area:'Ecommerce',responsable:'Cami',estado:'pendiente',prioridad:'alta',limite:d(2),creada:d(-1),hecha:'',meta:'',notas:''},
     {id:'t6',titulo:'Campaña Meta: club de lectura',area:'Pauta digital',responsable:'Cami',estado:'hecha',prioridad:'media',limite:d(-2),creada:d(-6),hecha:d(-3),meta:'',notas:''},
-    {id:'t7',titulo:'Fotos evento Zona G',area:'Eventos',responsable:'Community',estado:'hecha',prioridad:'media',limite:d(-1),creada:d(-5),hecha:d(-1),meta:'',notas:''},
-    {id:'t8',titulo:'Post semana de clubes',area:'Redes',responsable:'Diseño',estado:'hecha',prioridad:'media',limite:d(-2),creada:d(-7),hecha:d(-2),meta:'m1',notas:''},
+    {id:'t7',titulo:'Fotos evento Zona G',area:'Eventos',responsable:'Celes',estado:'hecha',prioridad:'media',limite:d(-1),creada:d(-5),hecha:d(-1),meta:'',notas:''},
+    {id:'t8',titulo:'Post semana de clubes',area:'Redes',responsable:'Vero',estado:'hecha',prioridad:'media',limite:d(-2),creada:d(-7),hecha:d(-2),meta:'m1',notas:''},
     {id:'t9',titulo:'Vitrina Salón Prado',area:'Visual',responsable:'Cami',estado:'hecha',prioridad:'media',limite:d(-4),creada:d(-10),hecha:d(-5),meta:'m3',notas:''}
   ];
   render();
