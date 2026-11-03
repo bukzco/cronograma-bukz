@@ -255,7 +255,7 @@ dialog::backdrop{background:rgba(31,31,27,.35)}
 
 <script>
 /* ===== Conexión con Google Sheets (Apps Script) ===== */
-const API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';
+const API_URL = 'https://script.google.com/macros/s/AKfycby1TsC7x1TETdRZjseZ4UcLbyhI210Fjx9S2RwjonlKB_u0S07ES3hk-jmKeArAMtVwtw/exec';
 const KEY_STORE = 'bukz-tareas-clave';
 const DEMO = API_URL.startsWith('PEGA');
 
@@ -713,7 +713,7 @@ if (DEMO) {
   render();
 } else {
   load();
-  setInterval(()=>{ if(!document.hidden && !$('#dlg').open) load(); }, 60000);
+  setInterval(()=>{ if(!document.hidden && !$('#dlg').open) load(); }, 20000);
   document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && !$('#dlg').open) load(); });
 }
 render();
