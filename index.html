@@ -358,7 +358,7 @@ if(API_URL.startsWith('PEGA')){
 }else{
   canWrite=true;$('#newBtn').disabled=false;
   load();
-  setInterval(()=>{if(!document.hidden&&!$('#dlg').open)load()},60000);
+  setInterval(()=>{if(!document.hidden&&!$('#dlg').open)load()},20000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!$('#dlg').open)load()});
 }
 </script>
