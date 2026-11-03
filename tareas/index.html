@@ -117,6 +117,25 @@ h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
 @media (max-width:900px){.pets{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.sprite{animation:none!important}}
 
+
+/* equipo en logros */
+.team-h{font-size:22px;margin:44px 0 6px}
+.team-sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px}
+.tcard{border:1px solid var(--line);background:var(--card);padding:18px}
+.tcard .top{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:center;margin-bottom:14px}
+.tcard h3{margin:0;font-size:20px;display:flex;justify-content:space-between;align-items:baseline}
+.tcard h3 small{font-size:12px;color:var(--muted);font-weight:700}
+.tcard .big{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.tcard .big b{color:var(--ink);font-size:22px;margin-right:4px}
+.stack{display:flex;height:12px;background:var(--soft);margin:2px 0 14px;overflow:hidden}
+.stack i{display:block;height:100%;background:var(--c)}
+.arows{display:flex;flex-direction:column;gap:7px}
+.arow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-size:14px}
+.arow .n{font-weight:700;font-variant-numeric:tabular-nums}
+.arow.zero{color:var(--muted);opacity:.6}
+.strong{display:inline-block;background:var(--soft);font-size:12px;font-weight:700;padding:3px 8px;margin-top:12px}
+
 /* metas */
 .mhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .mhead select,.mhead input{border:0;border-bottom:1px solid var(--line);background:transparent;padding:6px 2px;min-height:36px}
@@ -475,6 +494,29 @@ function renderMetas(){
 }
 
 /* ---------- logros ---------- */
+
+function renderTeamLogros(inPer, perLabel){
+  const cards = EQUIPO.map(n=>{
+    const p = petState(n);
+    const d = T.filter(t=>t.responsable===n && t.estado==='hecha' && inPer(t.hecha));
+    const dl = d.filter(t=>t.limite);
+    const pt = dl.length ? Math.round(dl.filter(t=>t.hecha<=t.limite).length/dl.length*100)+'% a tiempo' : '';
+    const by = AREAS.map(a=>({a, n:d.filter(t=>t.area===a.k).length}));
+    const best = [...by].sort((x,y)=>y.n-x.n)[0];
+    const metasAp = M.filter(m=>m.medida!=='numero' && cumplida(m) && d.some(t=>t.meta===m.id));
+    return `<article class="tcard">
+      <div class="top"><span class="stage m-${p.mood}">${sprite(n,p.mood)}</span>
+        <div><h3>${esc(n)}<small>Nivel ${p.lvl}</small></h3>
+        <div class="big"><b>${d.length}</b>${d.length===1?'logro':'logros'} ${perLabel}${pt?' · '+pt:''}</div></div></div>
+      <div class="stack" aria-hidden="true">${by.filter(x=>x.n).map(x=>`<i style="--c:${x.a.c};width:${x.n/d.length*100}%"></i>`).join('')}</div>
+      <div class="arows">${by.map(x=>`<div class="arow${x.n?'':' zero'}"><i class="dot" style="--c:${x.a.c}"></i><span>${esc(x.a.k)}</span><span class="n">${x.n}</span></div>`).join('')}</div>
+      ${d.length ? `<span class="strong">Área fuerte: ${esc(best.a.k)}</span>` : `<span class="strong">Aún sin logros ${perLabel}</span>`}
+      ${metasAp.length ? `<div class="lt">${metasAp.map(m=>`<p>Aportó a «${esc(m.titulo)}»</p>`).join('')}</div>` : ''}
+    </article>`;
+  }).join('');
+  return `<h2 class="team-h">El equipo</h2><p class="team-sub">Logros de cada persona por área ${perLabel}.</p><div class="tgrid">${cards}</div>`;
+}
+
 function renderLogros(){
   const y = TODAY.slice(0,4);
   const inPer = d => d && (st.per==='mes' ? d.slice(0,7)===THIS_MONTH : d.slice(0,4)===y);
@@ -507,7 +549,8 @@ function renderLogros(){
       <button class="tab" data-per="ano" aria-selected="${st.per==='ano'}">Este año</button></div></div>
     <div class="sum"><div><b>${done.length}</b><span>tareas hechas</span></div><div><b>${aTiempo===null?'—':aTiempo+'%'}</b><span>a tiempo</span></div>
       <div><b>${won.length}/${metasPer.length}</b><span>metas cumplidas</span></div><div><b style="font-size:clamp(22px,3vw,30px)">${esc(top)}</b><span>área con más tareas hechas</span></div></div>
-    <div class="agrid">${cards}</div>`;
+    <div class="agrid">${cards}</div>
+    ${renderTeamLogros(inPer, st.per==='mes' ? 'este mes' : 'este año')}`;
 }
 
 function render(){
