@@ -395,9 +395,9 @@ const BODY = [
  '..obbbbbbbbbbo..','..oobbbbbbbboo..','...oooooooooo...','....oo....oo....'
 ];
 const PETS = {
-  Cami:  { b:'#FCE823', l:'#FFF6A8', acc:[['k',[[2,6],[2,7],[2,8],[2,9],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11]]],['w',[[1,7],[1,8],[4,4],[4,6],[4,8],[4,10]]]] },
+  Cami:  { b:'#FCE823', l:'#FFF6A8', acc:[['c',[[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[4,12],[4,13],[4,14]]],['w',[[3,7],[3,8]]]] },
   Vero:  { b:'#F9B4CB', l:'#FFE0EA', acc:[['r',[[3,8],[3,9],[4,8],[4,9],[3,11],[3,12],[4,11],[4,12]]],['R',[[4,10],[3,10]]]] },
-  'Camilo A.': { b:'#7FCFD6', l:'#D2F2F5', acc:[['c',[[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[4,12],[4,13],[4,14]]],['w',[[3,7],[3,8]]]] },
+  'Camilo A.': { b:'#7FCFD6', l:'#D2F2F5', acc:[], over:'<g fill="none" stroke="#1F1F1B" stroke-width=".5"><rect x="3.75" y="7.75" width="3.5" height="2.5" fill="none"/><rect x="8.75" y="7.75" width="3.5" height="2.5" fill="none"/><path d="M7.5 8.6H8.5"/></g>' },
   Celes: { b:'#C3B1F0', l:'#E9E1FF', acc:[['G',[[2,8],[3,8]]],['g',[[1,6],[1,7],[2,7],[0,9],[1,9],[1,10]]]] }
 };
 const FACES = {
@@ -416,7 +416,7 @@ function sprite(name, mood){
   (FACES[mood]||FACES.calma).forEach(([c,pts])=>pts.forEach(([y,x])=>grid[y][x]=c));
   let r='';
   grid.forEach((row,y)=>row.forEach((c,x)=>{ if(c!=='.') r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[c]}"/>`; }));
-  return `<svg class="sprite" viewBox="0 0 16 16" aria-hidden="true">${r}</svg>`;
+  return `<svg class="sprite" viewBox="0 0 16 16" aria-hidden="true">${r}${P.over||''}</svg>`;
 }
 const HEART = ['.11.11.','1111111','1111111','.11111.','..111..','...1...'];
 function heart(on){ let r=''; HEART.forEach((row,y)=>row.split('').forEach((c,x)=>{ if(c==='1') r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${on?'#E2574C':'var(--line)'}"/>`; })); return `<svg viewBox="0 0 7 6" aria-hidden="true">${r}</svg>`; }
