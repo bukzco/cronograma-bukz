@@ -93,7 +93,7 @@ h1 .yr{background:var(--y);color:#1F1F1B;padding:0 .12em}
 
 
 /* mascotas */
-.pets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.pets{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-bottom:24px}
 .pet{border:1px solid var(--line);background:var(--card);padding:14px;display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:center;cursor:pointer;text-align:left;width:100%}
 .pet:hover{border-color:var(--ink)}
 .pet[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
@@ -280,7 +280,7 @@ const AREAS = [
 ];
 const AC = Object.fromEntries(AREAS.map(a=>[a.k,a.c]));
 const color = a => AC[a] || '#D6D5CE';
-const EQUIPO = ['Cami','Vero','Celes'];
+const EQUIPO = ['Cami','Vero','Celes','Camilo A.'];
 const equipo = () => [...new Set([...EQUIPO, ...T.map(t=>t.responsable).filter(Boolean)])];
 const ESTADOS = [{k:'pendiente',n:'Por hacer'},{k:'curso',n:'En curso'},{k:'hecha',n:'Hecha'}];
 const PRIOS = [{k:'alta',n:'Alta'},{k:'media',n:'Media'},{k:'baja',n:'Baja'}];
@@ -397,6 +397,7 @@ const BODY = [
 const PETS = {
   Cami:  { b:'#FCE823', l:'#FFF6A8', acc:[['k',[[2,6],[2,7],[2,8],[2,9],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11]]],['w',[[1,7],[1,8],[4,4],[4,6],[4,8],[4,10]]]] },
   Vero:  { b:'#F9B4CB', l:'#FFE0EA', acc:[['r',[[3,8],[3,9],[4,8],[4,9],[3,11],[3,12],[4,11],[4,12]]],['R',[[4,10],[3,10]]]] },
+  'Camilo A.': { b:'#7FCFD6', l:'#D2F2F5', acc:[['c',[[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[4,12],[4,13],[4,14]]],['w',[[3,7],[3,8]]]] },
   Celes: { b:'#C3B1F0', l:'#E9E1FF', acc:[['G',[[2,8],[3,8]]],['g',[[1,6],[1,7],[2,7],[0,9],[1,9],[1,10]]]] }
 };
 const FACES = {
@@ -406,7 +407,7 @@ const FACES = {
   sueno:[['k',[[9,4],[9,5],[9,6],[9,9],[9,10],[9,11],[11,7],[11,8]]],['d',[[6,12],[7,12],[7,13]]],['z',[[1,13],[1,14],[2,14],[3,13],[3,14]]]],
   triste:[['k',[[8,5],[9,5],[8,10],[9,10],[11,6],[10,7],[10,8],[11,9]]],['d',[[10,5],[11,5],[12,5]]]]
 };
-const PAL = { o:'#1F1F1B', k:'#1F1F1B', w:'#FFFFFF', t:'#E2574C', p:'#F48FA8', s:'#FCE823', d:'#6FA8F5', z:'#77766F', r:'#E2574C', R:'#A63A2B', g:'#5CBF6E', G:'#2F7D4F' };
+const PAL = { c:'#2B4C7E', o:'#1F1F1B', k:'#1F1F1B', w:'#FFFFFF', t:'#E2574C', p:'#F48FA8', s:'#FCE823', d:'#6FA8F5', z:'#77766F', r:'#E2574C', R:'#A63A2B', g:'#5CBF6E', G:'#2F7D4F' };
 function sprite(name, mood){
   const P = PETS[name] || { b:'#D6D5CE', l:'#EEEDE8', acc:[] };
   const pal = { ...PAL, b:P.b, l:P.l };
